@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import CustomUser as User
+from .templatetags.custom_tags import bizz_fuzz, check_age
 
 
 class UserModelTest(TestCase):
@@ -178,3 +179,38 @@ class UserDetailViewTest(TestCase):
         response = self.client.get(reverse('user-detail', args=[self.user.pk]), follow=True)
         self.assertContains(response, self.user.username)
         self.assertContains(response, self.user.random_number)
+
+
+
+class BizzFuzzTemplateTagTest(TestCase):
+
+    def test_number_divisible_by_5(self):
+        result = bizz_fuzz(10)
+        self.assertEqual(result, 'Fuzz')
+
+    def test_number_divisible_by_3(self):
+        result = bizz_fuzz(18)
+        self.assertEqual(result, 'Bizz')
+
+    def test_number_divisible_by_3_and_5(self):
+        result = bizz_fuzz(60)
+        self.assertEqual(result, 'BizzFuzz')
+
+    def test_number_indivisible_by_3_and_5(self):
+        result = bizz_fuzz(67)
+        self.assertEqual(result, '67')
+
+
+class CheckAgeTemplateTagTest(TestCase):
+
+    def test_number_less_than_13(self):
+        result = check_age(12)
+        self.assertEqual(result, 'blocked')
+
+    def test_number_greater_than_13(self):
+        result = check_age(24)
+        self.assertEqual(result, 'allowed')
+
+    def test_number_13(self):
+        result = check_age(13)
+        self.assertEqual(result, 'blocked')
