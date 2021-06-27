@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <h1 class="text-primary"> {{ object.username }} </h1>
+
+    <ul class="list-group">
+        <li class="list-group-item"><b>birthday: </b>{{ object.birthday }}</li>
+        <li class="list-group-item"><b>random number: </b>{{ object.random_number }}</li>
+    </ul>
+    <hr>
+
+    <a class="btn btn-primary" href={% url 'users' %} } role="button">Back</a>
+
+{% endblock %}

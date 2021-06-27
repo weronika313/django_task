@@ -55,3 +55,31 @@ class UserListViewTest(TestCase):
         response = self.client.get(reverse('users'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/user_list.html')
+
+
+class UserDetailViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(self):
+        self.user = User.objects.create(
+            username='User1',
+            birthday='2000-03-12',
+        )
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/users/1/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('user-detail', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('user-detail', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/user_detail.html')
+
+    def test_get_request(self):
+        response = self.client.get(reverse('user-detail', args=[self.user.pk]), follow=True)
+        self.assertContains(response, self.user.username)
+        self.assertContains(response, self.user.random_number)
