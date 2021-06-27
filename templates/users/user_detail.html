@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load custom_tags %}
 {% block content %}
 
     <h1 class="text-primary"> {{ object.username }} </h1>
@@ -7,10 +8,16 @@
     <ul class="list-group">
         <li class="list-group-item"><b>birthday: </b>{{ object.birthday }}</li>
         <li class="list-group-item"><b>random number: </b>{{ object.random_number }}</li>
+        <li class="list-group-item"><b>eligible: </b>{% check_age object.get_user_age %}</li>
+        <li class="list-group-item"><b>BizzFuzz:</b>{% bizz_fuzz object.random_number %}</li>
     </ul>
     <hr>
-    <a class="btn btn-primary" href={% url 'users' %} } role="button">Back</a>
+<a class="btn btn-primary" href={% url 'users' %} } role="button">Back</a>
     <a class="btn btn-warning" href={% url 'user-update' pk=object.pk %} role="button">Update</a>
     <a class="btn btn-danger" href={% url 'user-delete' pk=object.pk %} role="button">Delete</a>
+
+
+
+
 
 {% endblock %}

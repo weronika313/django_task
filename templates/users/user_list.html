@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% load crispy_forms_tags %}
+
+{% load custom_tags %}
 {% block content %}
 
     <a class="btn btn-primary" href={% url 'user-create'%}>Add new user</a>
@@ -13,22 +15,30 @@
             <tr>
                 <th scope="col">Username</th>
                 <th scope="col">Birthday</th>
+                <th scope="col">Eligible</th>
                 <th scope="col">Random Number</th>
+                <th scope="col">BizzFuzz</th>
             </tr>
 
             </thead>
 
             <tbody>
-            {% for user in users %}
+
+            {% for object in object_list %}
                 <tr>
                     <td>
-                        <a class="nav-link disabled" href={% url 'user-detail' pk=user.pk %}>{{ user.username }}</a>
+                        <a class="nav-link disabled" href={% url 'user-detail' pk=object.pk %}>{{ object.username }}</a>
                     </td>
 
-                    <td> {{ user.birthday }} </td>
+                    <td> {% format_date object.birthday %} </td>
 
-                    <td> {{ user.random_number }} </td>
+                    <td> {% check_age object.get_user_age %} </td>
+
+                    <td> {{ object.random_number }} </td>
+
+                    <td> {% bizz_fuzz object.random_number %} </td>
                 </tr>
+
             {% endfor %}
 
             </tbody>
