@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+    {% if users %}
+        <hr>
+
+        <table class="table">
+            <thead>
+
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Birthday</th>
+                <th scope="col">Random Number</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>
+                        <a class="nav-link disabled" href={% url 'user-detail' pk=object.pk %}>{{ object.username }}</a>
+                    </td>
+
+                    <td> {{ object.birthday }} </td>
+
+                    <td> {{ object.random_number }} </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <p> No added users</p>
+
+    {% endif %}
+
+{% endblock %}

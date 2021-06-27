@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic.list import ListView
+from .models import CustomUser
 
-# Create your views here.
+
+class UsersList(ListView):
+    model = CustomUser
+    template_name = 'users/user_list.html'
+    context_object_name = 'users'
