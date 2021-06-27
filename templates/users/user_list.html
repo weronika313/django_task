@@ -19,15 +19,15 @@
             </thead>
 
             <tbody>
-            {% for object in object_list %}
+            {% for user in users %}
                 <tr>
                     <td>
-                        <a class="nav-link disabled" href={% url 'user-detail' pk=object.pk %}>{{ object.username }}</a>
+                        <a class="nav-link disabled" href={% url 'user-detail' pk=user.pk %}>{{ user.username }}</a>
                     </td>
 
-                    <td> {{ object.birthday }} </td>
+                    <td> {{ user.birthday }} </td>
 
-                    <td> {{ object.random_number }} </td>
+                    <td> {{ user.random_number }} </td>
                 </tr>
             {% endfor %}
 
