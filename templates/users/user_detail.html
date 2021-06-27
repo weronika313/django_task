@@ -9,7 +9,8 @@
         <li class="list-group-item"><b>random number: </b>{{ object.random_number }}</li>
     </ul>
     <hr>
-
     <a class="btn btn-primary" href={% url 'users' %} } role="button">Back</a>
+    <a class="btn btn-warning" href={% url 'user-update' pk=object.pk %} role="button">Update</a>
+    <a class="btn btn-danger" href={% url 'user-delete' pk=object.pk %} role="button">Delete</a>
 
 {% endblock %}

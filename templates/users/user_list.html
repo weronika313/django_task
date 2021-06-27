@@ -3,9 +3,10 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    {% if users %}
-        <hr>
+    <a class="btn btn-primary" href={% url 'user-create'%}>Add new user</a>
+    <hr>
 
+    {% if users %}
         <table class="table">
             <thead>
 

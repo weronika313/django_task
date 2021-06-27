@@ -57,6 +57,101 @@ class UserListViewTest(TestCase):
         self.assertTemplateUsed(response, 'users/user_list.html')
 
 
+class UserUpdateViewTest(TestCase):
+    @classmethod
+    def setUpTestData(self):
+        self.user = User.objects.create(
+            username='User1',
+            birthday='2000-03-12',
+        )
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get(f'/user/{self.user.pk}/')
+        print(response)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('user-update', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('user-update', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/user_update.html')
+
+    def test_update_user(self):
+
+        response = self.client.post(
+            reverse('user-update', args=[self.user.pk]),
+            {'username': 'updated_username', 'birthday': '2000-10-10'})
+
+        self.assertEqual(response.status_code, 302)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'updated_username')
+        self.assertEqual(self.user.birthday, datetime.date(2000, 10, 10))
+
+
+class UserCreateViewTest(TestCase):
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get(f'/user/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('user-create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('user-create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/user_create.html')
+
+    def test_create_user(self):
+
+        response = self.client.post(
+            reverse('user-create'),
+            {'username': 'username', 'birthday': '2000-10-10'})
+
+        self.assertEqual(response.status_code, 302)
+
+        user = User.objects.last()
+
+        self.assertEqual(user.username, 'username')
+        self.assertEqual(user.birthday, datetime.date(2000, 10, 10))
+
+
+class UserDeleteViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(self):
+        self.user = User.objects.create(
+            username='User1',
+            birthday='2000-03-12',
+        )
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get(f'/user/{self.user.pk}/delete/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('user-delete', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('user-delete', args=[self.user.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/user_confirm_delete.html')
+
+    def test_get_request(self):
+        response = self.client.get(reverse('user-delete', args=[self.user.pk]), follow=True)
+        self.assertContains(response, f'Are you sure you want to delete "{self.user}"?')
+
+    def test_post_request(self):
+        post_response = self.client.post(reverse('user-delete', args=[self.user.pk]), follow=True)
+        self.assertRedirects(post_response, reverse('users'), status_code=302)
+
+
 class UserDetailViewTest(TestCase):
 
     @classmethod
