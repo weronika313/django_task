@@ -6,9 +6,10 @@
 {% block content %}
 
     <a class="btn btn-primary" href={% url 'user-create'%}>Add new user</a>
-    <hr>
-
     {% if users %}
+    <button class="btn btn-primary" onclick="exportTableToCSV('users.csv')">Download user list</button>
+
+    <hr>
         <table class="table">
             <thead>
 
@@ -24,19 +25,19 @@
 
             <tbody>
 
-            {% for object in object_list %}
+            {% for user in users %}
                 <tr>
                     <td>
-                        <a class="nav-link disabled" href={% url 'user-detail' pk=object.pk %}>{{ object.username }}</a>
+                        <a class="nav-link disabled" href={% url 'user-detail' pk=user.pk %}>{{ user.username }}</a>
                     </td>
 
-                    <td> {% format_date object.birthday %} </td>
+                    <td> {% format_date user.birthday %} </td>
 
-                    <td> {% check_age object.get_user_age %} </td>
+                    <td> {% check_age user.get_user_age %} </td>
 
-                    <td> {{ object.random_number }} </td>
+                    <td> {{ user.random_number }} </td>
 
-                    <td> {% bizz_fuzz object.random_number %} </td>
+                    <td> {% bizz_fuzz user.random_number %} </td>
                 </tr>
 
             {% endfor %}
@@ -49,5 +50,41 @@
         <p> No added users</p>
 
     {% endif %}
+
+    <script>
+        function exportTableToCSV(filename) {
+            const csv = [];
+            const rows = document.querySelectorAll("table tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll("td, th");
+
+                for (let j = 0; j < cols.length; j++)
+                    row.push(cols[j].innerText);
+
+                csv.push(row.join(","));
+            }
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+        function downloadCSV(csv, filename) {
+            let csvFile;
+            let downloadLink;
+
+            csvFile = new Blob([csv], {type: "text/csv"});
+
+            downloadLink = document.createElement("a");
+
+            downloadLink.download = filename;
+
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            downloadLink.style.display = "none";
+
+            document.body.appendChild(downloadLink);
+
+            downloadLink.click();
+        }
+    </script>
 
 {% endblock %}
