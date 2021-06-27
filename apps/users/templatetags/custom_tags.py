@@ -7,9 +7,9 @@ register = template.Library()
 def bizz_fuzz(num):
     output = ""
     if num % 3 == 0:
-        output += 'Bizz'
+        output += "Bizz"
     if num % 5 == 0:
-        output += 'Fuzz'
+        output += "Fuzz"
     if output == "":
         output += str(num)
 
@@ -19,9 +19,9 @@ def bizz_fuzz(num):
 @register.simple_tag
 def check_age(age):
     if age > 13:
-        return 'allowed'
+        return "allowed"
     else:
-        return 'blocked'
+        return "blocked"
 
 
 @register.simple_tag
